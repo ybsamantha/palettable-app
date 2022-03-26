@@ -12,8 +12,6 @@ class Product(models.Model):
     image_link = models.CharField(max_length=1000)
     product_description = models.CharField(max_length=4000)
     product_type = models.CharField(max_length=150)
-    users = models.ManyToManyField(User)
-    favorites = models.ManyToManyField(User, related_name='favorite', default=None, blank=True)
 
     class Meta:
         managed = False
@@ -21,6 +19,13 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.product_name} by {self.brand}'
+
+class ProductFavorite(models.Model):
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.product_id} favorited by {self.user_id}'
 
 class Color(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

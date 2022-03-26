@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
-from .models import Product, Color, Look
+from .models import Product, Color, Look, ProductFavorite
+from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
@@ -46,15 +47,25 @@ def signup(request):
   return render(request, 'registration/signup.html', {'form': form, 'error': error_message})
 
 def favorite_add(request, id, user_id):
-  Product.objects.get(id=id).favorites.add(request.user)
-  return redirect(request.META['HTTP_REFERER'])
+    product_favorite = ProductFavorite()
+    product = Product.objects.get(id=id)
+    user = User.objects.get(id=user_id)
+    product_favorite.product_id = product
+    product_favorite.user_id = user
+    product_favorite.save()
+    return redirect(request.META['HTTP_REFERER'])
 
 def favorite_remove(request, id, user_id):
   Product.objects.get(id=id).favorites.remove(request.user)
   return redirect(request.META['HTTP_REFERER'])
 
 def favorite_list(request, user_id):
-  favorites = Product.objects.filter(favorites=request.user)
+  favorite_product_ids = ProductFavorite.objects.filter(user_id=request.user)
+  # loop over the above collection and do Product.objects.get() for all those
+  favorites = []
+  for product in favorite_product_ids:
+    favorites.append(Product.objects.get(id=product.id))
+  # where theid is the id from favorite_product_ids
   return render(request, 'favorites/index.html', {'favorites': favorites})
 
 def looks_list(request):
