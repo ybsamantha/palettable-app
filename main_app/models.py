@@ -43,7 +43,6 @@ class Color(models.Model):
 class Look(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=300)
-    products = models.ManyToManyField(Product)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
