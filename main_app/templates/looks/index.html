@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{user.username}}'s Looks</h1>
+    <h3><a href="{% url 'looks_create' %}">Add a new Look</a></h3>
+{% for look in looks %}
+    <div class="row">
+        <div class="col s12 m7">
+            <div class="card"> 
+                <a href="{% url 'looks_detail' look.id %}">
+                    <div class="card-content">
+                        <p>{{look.name}}</p>
+                        <p>{{look.description}}</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}

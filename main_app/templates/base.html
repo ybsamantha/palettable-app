@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palettable</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+<body>
+    <header class="navbar-fixed">
+        <nav class="deep-orange lighten-3">
+            <div class="nav-wrapper">
+                <a href="/" class="brand-logo center">Palettable</a>
+                <ul class="right">
+                    <li><a href="{% url 'home'%}">Home</a></li>
+                    <li><a href="{% url 'about'%}">About</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'looks_list' %}">My Looks</a></li>      
+                    <li><a href="{% url 'favorite_list' user.id%}">My Favorites</a></li>      
+                    <li><a href="{% url 'logout'%}">Log Out</a></li>
+                    {% else %}      
+                    <li><a href="{% url 'signup'%}">Sign Up</a></li>    
+                    <li><a href="{% url 'login'%}">Log In</a></li>    
+                    {% endif %}  
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer class="page-footer deep-orange lighten-3" style="padding-top: 0px">
+        <div>
+            All Rights Reserved, &copy; 2022 Palettable
+        </div>
+    </footer>
+</body>
+</html>
