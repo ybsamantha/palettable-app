@@ -15,6 +15,10 @@ class Product(models.Model):
     users = models.ManyToManyField(User)
     favorites = models.ManyToManyField(User, related_name='favorite', default=None, blank=True)
 
+    class Meta:
+        managed = False
+        db_table = 'product'
+
     def __str__(self):
         return f'{self.product_name} by {self.brand}'
 
