@@ -16,7 +16,7 @@ class Product(models.Model):
     favorites = models.ManyToManyField(User, related_name='favorite', default=None, blank=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'product'
 
     def __str__(self):
@@ -29,7 +29,7 @@ class Color(models.Model):
     color_id = models.AutoField(primary_key=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'color'
 
     def __str__(self):

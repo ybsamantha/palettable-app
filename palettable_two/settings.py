@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'palettable_two.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'palettable_app',
+        'NAME': 'testpalettable',
     }
 }
 
