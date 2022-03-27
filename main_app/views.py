@@ -27,9 +27,9 @@ def products_index_by_tag(request, product_tag):
     return redirect('home')
   return render(request, 'products_index.html', {'product': products_list})
 
-def products_detail(request, id):
-  product = Product.objects.get(id=id)
-  colors = Color.objects.filter(product=id)
+def products_detail(request, product_id):
+  product = Product.objects.get(id=product_id)
+  colors = Color.objects.filter(product_id=product_id)
   return render(request, 'products/detail.html', {'product': product, 'colors': colors})
 
 def signup(request):
@@ -46,25 +46,25 @@ def signup(request):
   context = { 'form': form, 'error': error_message }
   return render(request, 'registration/signup.html', {'form': form, 'error': error_message})
 
-def favorite_add(request, id, user_id):
+def favorite_add(request, product_id, user_id):
     product_favorite = ProductFavorite()
-    product = Product.objects.get(id=id)
+    product = Product.objects.get(id=product_id)
     user = User.objects.get(id=user_id)
     product_favorite.product_id = product
     product_favorite.user_id = user
     product_favorite.save()
     return redirect(request.META['HTTP_REFERER'])
 
-def favorite_remove(request, id, user_id):
-  Product.objects.get(id=id).favorites.remove(request.user)
-  return redirect(request.META['HTTP_REFERER'])
+def favorite_remove(request, product_id, user_id):
+    ProductFavorite.objects.get(product_id=product_id).delete()
+    return redirect(request.META['HTTP_REFERER'])
 
 def favorite_list(request, user_id):
   favorite_product_ids = ProductFavorite.objects.filter(user_id=request.user)
   # loop over the above collection and do Product.objects.get() for all those
   favorites = []
   for product in favorite_product_ids:
-    favorites.append(Product.objects.get(id=product.id))
+    favorites.append(Product.objects.get(id=product.product_id.id))
   # where theid is the id from favorite_product_ids
   return render(request, 'favorites/index.html', {'favorites': favorites})
 
@@ -85,7 +85,10 @@ class LookCreate(CreateView):
 
 def looks_detail(request, look_id):
   look = Look.objects.get(id=look_id)
-  products_look_doesnt_have = Product.objects.filter(favorites=request.user).exclude(id__in = look.products.all().values_list('id'))
+  products_look_doesnt_have = ProductFavorite.objects.filter(user_id=request.user).exclude(id__in = ProductFavorite.objects.all().values_list('product_id'))
+  looks_favorites = []
+  for product in products_look_doesnt_have:
+    looks_favorites.append(ProductFavorite.objects.get(id=product.id))
   return render(request, 'looks/detail.html', {
     'look':look,
     'products': products_look_doesnt_have
